@@ -1,0 +1,37 @@
+#include <iostream>
+#include <opencv2/opencv.hpp>
+
+int main() {
+    // 1. 비디오 파일 열기
+    cv::VideoCapture cap("sample_video.mp4");  // 여기에 영상 파일 경로를 넣기
+
+    if (!cap.isOpened()) {
+        std::cerr << "Error: Cannot open video file." << std::endl;
+        return -1;
+    }
+    std::cout << "Video opened successfully.\n";
+
+    // 2. 프레임 읽어서 출력하기
+    cv::Mat frame;
+    while (true) {
+        bool ret = cap.read(frame);  // 다음 프레임 읽기
+        if (!ret) {
+            std::cout << "End of video.\n";
+            break;
+        }
+
+        cv::imshow("Video Playback", frame);  // 화면에 출력
+
+        // 3. 25ms 대기, 'q' 키 누르면 종료
+        if (cv::waitKey(25) == 'q') {
+            std::cout << "Playback interrupted by user.\n";
+            break;
+        }
+    }
+
+    // 4. 리소스 해제
+    cap.release();
+    cv::destroyAllWindows();
+
+    return 0;
+}
